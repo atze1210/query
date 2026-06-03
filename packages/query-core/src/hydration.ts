@@ -202,12 +202,16 @@ export function hydrate(
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const queries = (dehydratedState as DehydratedState).queries || []
 
+  const existingMutationIds = new Set(
+    mutationCache.getAll().map((mutation) => mutation.mutationId),
+  )
+
   mutations.forEach(({ mutationId, state, ...mutationOptions }) => {
-    if (
-      mutationId !== undefined &&
-      mutationCache.getAll().some((mutation) => mutation.mutationId === mutationId)
-    ) {
-      return
+    if (mutationId !== undefined) {
+      if (existingMutationIds.has(mutationId)) {
+        return
+      }
+      existingMutationIds.add(mutationId)
     }
 
     mutationCache.build(
