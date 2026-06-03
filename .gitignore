@@ -34,6 +34,7 @@ stats.html
 .vscode/settings.json
 .vscode/mcp.json
 .cursor/rules
+.claude/
 .github/instructions/nx.instructions.md
 
 *.log
