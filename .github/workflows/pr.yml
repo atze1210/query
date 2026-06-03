@@ -13,6 +13,45 @@ env:
 permissions: {}
 
 jobs:
+  detect-preview-changes:
+    name: Detect Preview Changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      preview: ${{ steps.changes.outputs.preview }}
+      version_preview: ${{ steps.changes.outputs.version_preview }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Detect changed files
+        id: changes
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          CHANGED="$(git diff --name-only "$BASE_SHA"...HEAD)"
+          echo "Changed files:"
+          echo "$CHANGED"
+
+          changed() { echo "$CHANGED" | grep -qE "$1"; }
+
+          preview=false
+          version_preview=false
+
+          if changed '^(packages/|examples/|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|tsconfig\.json$|eslint\.config\.js$|nx\.json$|\.nvmrc$|\.size-limit\.json$|\.github/workflows/pr\.yml$)'; then
+            preview=true
+          fi
+
+          if changed '^(packages/|\.changeset/|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|\.nvmrc$|\.github/workflows/pr\.yml$)'; then
+            version_preview=true
+          fi
+
+          {
+            echo "preview=$preview"
+            echo "version_preview=$version_preview"
+          } >> "$GITHUB_OUTPUT"
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -40,6 +79,8 @@ jobs:
         run: npx nx-cloud stop-all-agents
   preview:
     name: Preview
+    needs: detect-preview-changes
+    if: needs.detect-preview-changes.outputs.preview == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -68,6 +109,8 @@ jobs:
           build_script: build:all
   version-preview:
     name: Version Preview
+    needs: detect-preview-changes
+    if: needs.detect-preview-changes.outputs.version_preview == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
