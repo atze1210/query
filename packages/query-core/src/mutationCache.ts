@@ -106,11 +106,16 @@ export class MutationCache extends Subscribable<MutationCacheListener> {
     client: QueryClient,
     options: MutationOptions<TData, TError, TVariables, TOnMutateResult>,
     state?: MutationState<TData, TError, TVariables, TOnMutateResult>,
+    mutationId?: number,
   ): Mutation<TData, TError, TVariables, TOnMutateResult> {
+    const resolvedMutationId =
+      mutationId === undefined ? ++this.#mutationId : mutationId
+    this.#mutationId = Math.max(this.#mutationId, resolvedMutationId)
+
     const mutation = new Mutation({
       client,
       mutationCache: this,
-      mutationId: ++this.#mutationId,
+      mutationId: resolvedMutationId,
       options: client.defaultMutationOptions(options),
       state,
     })

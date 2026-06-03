@@ -36,6 +36,9 @@ export interface HydrateOptions {
 }
 
 interface DehydratedMutation {
+  // This is only optional because older versions of Query might have dehydrated
+  // without it which we need to handle for backwards compatibility.
+  mutationId?: number
   mutationKey?: MutationKey
   state: MutationState
   meta?: MutationMeta
@@ -64,6 +67,7 @@ export interface DehydratedState {
 
 function dehydrateMutation(mutation: Mutation): DehydratedMutation {
   return {
+    mutationId: mutation.mutationId,
     mutationKey: mutation.options.mutationKey,
     state: mutation.state,
     ...(mutation.options.scope && { scope: mutation.options.scope }),
@@ -198,7 +202,14 @@ export function hydrate(
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const queries = (dehydratedState as DehydratedState).queries || []
 
-  mutations.forEach(({ state, ...mutationOptions }) => {
+  mutations.forEach(({ mutationId, state, ...mutationOptions }) => {
+    if (
+      mutationId !== undefined &&
+      mutationCache.getAll().some((mutation) => mutation.mutationId === mutationId)
+    ) {
+      return
+    }
+
     mutationCache.build(
       client,
       {
@@ -207,6 +218,7 @@ export function hydrate(
         ...mutationOptions,
       },
       state,
+      mutationId,
     )
   })
 

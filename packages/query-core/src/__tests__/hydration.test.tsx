@@ -256,6 +256,44 @@ describe('dehydration and rehydration', () => {
     hydrationClient.clear()
   })
 
+  it('should preserve mutation identity during hydration and avoid duplicates', async () => {
+    const key = queryKey()
+    const mutationCache = new MutationCache()
+    const queryClient = new QueryClient({ mutationCache })
+
+    await executeMutation(
+      queryClient,
+      {
+        mutationKey: key,
+        mutationFn: () => Promise.resolve('done'),
+      },
+      undefined,
+    )
+
+    const dehydrated = dehydrate(queryClient, {
+      shouldDehydrateMutation: () => true,
+    })
+
+    expect(dehydrated.mutations[0]?.mutationId).toBeDefined()
+
+    const parsed = JSON.parse(JSON.stringify(dehydrated))
+    const hydrationCache = new MutationCache()
+    const hydrationClient = new QueryClient({
+      mutationCache: hydrationCache,
+    })
+
+    hydrate(hydrationClient, parsed)
+    hydrate(hydrationClient, parsed)
+
+    expect(hydrationCache.getAll()).toHaveLength(1)
+    expect(hydrationCache.getAll()[0]?.mutationId).toBe(
+      dehydrated.mutations[0]?.mutationId,
+    )
+
+    queryClient.clear()
+    hydrationClient.clear()
+  })
+
   it('should work with complex keys', async () => {
     const key = queryKey()
     const complexKey = [...key, { key: ['string'], key2: 0 }]
