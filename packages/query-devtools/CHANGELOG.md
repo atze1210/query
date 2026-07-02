@@ -1,5 +1,12 @@
 # @tanstack/query-devtools
 
+## 5.100.15
+
+### Patch Changes
+
+- 3042860: Avoid crashing devtools query rows when a cached query state is temporarily unavailable.
+- e631dc3: Resolve devtools query rows from their stable query hash so mutated object query keys do not break row rendering.
+
 ## 5.100.14
 
 ## 5.100.13
