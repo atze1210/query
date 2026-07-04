@@ -1,4 +1,6 @@
-export class Subscribable<TListener extends Function> {
+type SubscribableListener = (...args: Array<any>) => unknown
+
+export class Subscribable<TListener extends SubscribableListener> {
   protected listeners = new Set<TListener>()
 
   constructor() {
