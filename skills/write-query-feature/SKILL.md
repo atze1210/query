@@ -70,21 +70,18 @@ If you've added a new public type or function, add it to `index.ts`.
 
 Add a test file in `src/__tests__/` that mirrors the source file (e.g. `queryClient.test.ts`).
 
-Run the tests:
+Run the tests from the **repo root** (both commands below are equivalent and safe to use):
 
 ```bash
 # type tests
 pnpm --filter @tanstack/query-core test:types
 
-# runtime tests
+# runtime tests — either of these works
 pnpm --filter @tanstack/query-core test:lib
-```
-
-Or from the repo root using nx:
-
-```bash
 npx nx run @tanstack/query-core:test:lib
 ```
+
+> **Do not** `cd` into the package directory and run `pnpm run test:lib` from there — cross-package dependencies will break.
 
 ### 6. Check framework adapters
 
@@ -109,4 +106,4 @@ Select `@tanstack/query-core`. Choose `patch` for bug fixes, `minor` for new non
 - Don't add framework-specific code to `query-core`.
 - Don't forget to export new public types from `index.ts`.
 - Don't skip the type tests — they catch regressions that runtime tests miss.
-- Don't run `pnpm run test:lib` from inside the package directory; always use `nx` from the repo root.
+- Don't `cd` into the package directory and run `pnpm run test:lib` from there; always run test commands from the **repo root** using `pnpm --filter` or `nx`.

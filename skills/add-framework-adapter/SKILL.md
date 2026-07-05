@@ -51,7 +51,7 @@ Required files (use react-query or vue-query as a reference):
 | File | Purpose |
 |------|---------|
 | `index.ts` | Public barrel — re-export everything the user needs |
-| `queryClient.ts` | Framework-wrapped `QueryClient` (if the framework needs a reactive wrapper) |
+| `queryClient.ts` | Framework-wrapped `QueryClient` — needed when the framework's reactivity system must own the client instance (e.g. Vue's `provide`/`inject`, Svelte stores). Omit this file if the framework lets you pass the client directly as a prop or function argument (as React's `QueryClientProvider` does). |
 | `queryOptions.ts` | Re-export or extend `queryOptions` from query-core |
 | `infiniteQueryOptions.ts` | Same for infinite queries |
 | `mutationOptions.ts` | Same for mutations |
