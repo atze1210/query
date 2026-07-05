@@ -9,6 +9,7 @@ import {
   hashQueryKeyByOptions,
   isPlainArray,
   isPlainObject,
+  isValidTimeout,
   keepPreviousData,
   matchMutation,
   partialMatchKey,
@@ -534,6 +535,21 @@ describe('core/utils', () => {
       const nested2 = [{ b: 2, a: { c: 3, d: 4 } }]
 
       expect(hashKey(nested1)).toEqual(hashKey(nested2))
+    })
+  })
+
+  describe('isValidTimeout', () => {
+    it('should accept valid timeout values', () => {
+      expect(isValidTimeout(0)).toEqual(true)
+      expect(isValidTimeout(1_000)).toEqual(true)
+    })
+
+    it('should reject invalid timeout values', () => {
+      expect(isValidTimeout(-1)).toEqual(false)
+      expect(isValidTimeout(Number.NaN)).toEqual(false)
+      expect(isValidTimeout(Number.POSITIVE_INFINITY)).toEqual(false)
+      expect(isValidTimeout('1000')).toEqual(false)
+      expect(isValidTimeout(undefined)).toEqual(false)
     })
   })
 
