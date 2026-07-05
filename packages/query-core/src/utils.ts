@@ -225,12 +225,20 @@ export function hashQueryKeyByOptions<TQueryKey extends QueryKey = QueryKey>(
   return hashFn(queryKey)
 }
 
+const hashKeyCache = new WeakMap<ReadonlyArray<unknown>, string>()
+
 /**
  * Default query & mutation keys hash function.
  * Hashes the value into a stable hash.
  */
 export function hashKey(queryKey: QueryKey | MutationKey): string {
-  return JSON.stringify(queryKey, (_, val) =>
+  if (Array.isArray(queryKey)) {
+    const cached = hashKeyCache.get(queryKey)
+    if (cached !== undefined) {
+      return cached
+    }
+  }
+  const hash = JSON.stringify(queryKey, (_, val) =>
     isPlainObject(val)
       ? Object.keys(val)
           .sort()
@@ -240,6 +248,10 @@ export function hashKey(queryKey: QueryKey | MutationKey): string {
           }, {} as any)
       : val,
   )
+  if (Array.isArray(queryKey)) {
+    hashKeyCache.set(queryKey, hash)
+  }
+  return hash
 }
 
 /**
