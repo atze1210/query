@@ -237,7 +237,7 @@ export function hashKey(queryKey: QueryKey | MutationKey): string {
           .reduce((result, key) => {
             result[key] = val[key]
             return result
-          }, {} as any)
+          }, Object.create(null) as any)
       : val,
   )
 }
