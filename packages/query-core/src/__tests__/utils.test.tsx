@@ -535,6 +535,24 @@ describe('core/utils', () => {
 
       expect(hashKey(nested1)).toEqual(hashKey(nested2))
     })
+
+    it('should not produce hash collisions for objects with __proto__ own key', () => {
+      // Objects with __proto__ as an own key (e.g. from JSON.parse) must hash
+      // differently from plain empty objects. Using {} as the reduce accumulator
+      // would invoke the __proto__ setter and silently drop the key.
+      const withProto = JSON.parse('{"__proto__":{"polluted":true}}') as Record<
+        string,
+        unknown
+      >
+
+      expect(Object.prototype.hasOwnProperty.call(withProto, '__proto__')).toBe(
+        true,
+      )
+      expect(hashKey([withProto])).not.toEqual(hashKey([{}]))
+      expect(hashKey([withProto])).toEqual(
+        '[{"__proto__":{"polluted":true}}]',
+      )
+    })
   })
 
   describe('ensureQueryFn', () => {
