@@ -38,6 +38,8 @@ overrides:
   typescript-eslint: '8.58.1'
   vite: '^6.4.1'
   esbuild: '^0.27.2'
+  tar: '>=7.5.19'
+  js-yaml@3: '>=3.15.0'
 
 allowBuilds:
   # root dependency
