@@ -535,6 +535,18 @@ describe('core/utils', () => {
 
       expect(hashKey(nested1)).toEqual(hashKey(nested2))
     })
+
+    it('should preserve an own __proto__ property in hashes', () => {
+      const key = [{} as Record<string, string>]
+
+      Object.defineProperty(key[0], '__proto__', {
+        value: 'proto',
+        enumerable: true,
+      })
+
+      expect(hashKey([{}])).not.toEqual(hashKey(key))
+      expect(hashKey(key)).toEqual('[{"__proto__":"proto"}]')
+    })
   })
 
   describe('ensureQueryFn', () => {
