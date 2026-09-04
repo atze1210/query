@@ -535,6 +535,21 @@ describe('core/utils', () => {
 
       expect(hashKey(nested1)).toEqual(hashKey(nested2))
     })
+
+    it('should not produce hash collisions for objects with __proto__ own key', () => {
+      const withProto = JSON.parse('{"__proto__":{"polluted":true}}') as Record<
+        string,
+        unknown
+      >
+
+      expect(Object.prototype.hasOwnProperty.call(withProto, '__proto__')).toBe(
+        true,
+      )
+      expect(hashKey([withProto])).not.toEqual(hashKey([{}]))
+      expect(hashKey([withProto])).toEqual(
+        '[{"__proto__":{"polluted":true}}]',
+      )
+    })
   })
 
   describe('ensureQueryFn', () => {
