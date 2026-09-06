@@ -535,6 +535,13 @@ describe('core/utils', () => {
 
       expect(hashKey(nested1)).toEqual(hashKey(nested2))
     })
+
+    it('should preserve own __proto__ keys', () => {
+      const key = [{ __proto__: { nested: 'value' } }]
+
+      expect(hashKey(key)).toEqual(JSON.stringify(key))
+      expect(hashKey(key)).not.toEqual(hashKey([{}]))
+    })
   })
 
   describe('ensureQueryFn', () => {
