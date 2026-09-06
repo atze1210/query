@@ -258,7 +258,7 @@ export function partialMatchKey(a: any, b: any): boolean {
   if (a && b && typeof a === 'object' && typeof b === 'object') {
     return Object.keys(b).every((key) => {
       if (b[key] === undefined) {
-        return true
+        return key in a
       }
 
       return partialMatchKey(a[key], b[key])

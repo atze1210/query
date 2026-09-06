@@ -173,6 +173,13 @@ describe('core/utils', () => {
       expect(partialMatchKey(a, b)).toEqual(true)
     })
 
+    it('should not match undefined filter properties against missing query properties', () => {
+      const a = ['todos', { page: 1 }]
+      const b = ['todos', { page: 1, status: undefined }]
+
+      expect(partialMatchKey(a, b)).toEqual(false)
+    })
+
     it('should ignore undefined filter properties recursively', () => {
       const a = ['todos', { filters: { status: 'open', assignee: 'a' } }]
       const b = ['todos', { filters: { status: undefined } }]
