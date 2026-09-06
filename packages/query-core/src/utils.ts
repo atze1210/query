@@ -234,10 +234,10 @@ export function hashKey(queryKey: QueryKey | MutationKey): string {
     isPlainObject(val)
       ? Object.keys(val)
           .sort()
-          .reduce((result, key) => {
+          .reduce<Record<string, unknown>>((result, key) => {
             result[key] = val[key]
             return result
-          }, {} as any)
+          }, Object.create(null))
       : val,
   )
 }

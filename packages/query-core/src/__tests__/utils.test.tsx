@@ -535,6 +535,16 @@ describe('core/utils', () => {
 
       expect(hashKey(nested1)).toEqual(hashKey(nested2))
     })
+
+    it('should preserve own __proto__ keys and not collide with empty objects', () => {
+      const withProtoProperty = Object.defineProperty({}, '__proto__', {
+        value: 'proto',
+        enumerable: true,
+      })
+
+      expect(hashKey([withProtoProperty])).toEqual('[{"__proto__":"proto"}]')
+      expect(hashKey([withProtoProperty])).not.toEqual(hashKey([{}]))
+    })
   })
 
   describe('ensureQueryFn', () => {
