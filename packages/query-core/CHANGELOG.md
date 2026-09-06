@@ -1,5 +1,11 @@
 # @tanstack/query-core
 
+## 5.100.15
+
+### Patch Changes
+
+- Preserve `__proto__` own properties when normalizing plain-object query keys in `hashKey`. ([`c75fd97`](https://github.com/TanStack/query/commit/c75fd97a626d1b537cbc2fdec9b98d3640f1753c))
+
 ## 5.100.14
 
 ## 5.100.13
