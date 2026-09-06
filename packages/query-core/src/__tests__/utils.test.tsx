@@ -165,6 +165,27 @@ describe('core/utils', () => {
       const b = [{ a: null, c: 'c', d: [{ d: 'd ' }] }]
       expect(partialMatchKey(a, b)).toEqual(false)
     })
+
+    it('should ignore undefined filter properties when matching concrete values', () => {
+      const a = ['todos', { page: 1, status: 'open' }]
+      const b = ['todos', { page: 1, status: undefined }]
+
+      expect(partialMatchKey(a, b)).toEqual(true)
+    })
+
+    it('should ignore undefined filter properties recursively', () => {
+      const a = ['todos', { filters: { status: 'open', assignee: 'a' } }]
+      const b = ['todos', { filters: { status: undefined } }]
+
+      expect(partialMatchKey(a, b)).toEqual(true)
+    })
+
+    it('should not match a concrete filter value against an undefined query key property', () => {
+      const a = ['todos', { status: undefined }]
+      const b = ['todos', { status: 'open' }]
+
+      expect(partialMatchKey(a, b)).toEqual(false)
+    })
   })
 
   describe('replaceEqualDeep', () => {
