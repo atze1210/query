@@ -537,7 +537,9 @@ describe('core/utils', () => {
     })
 
     it('should preserve own __proto__ keys', () => {
-      const key = [{ __proto__: { nested: 'value' } }]
+      const obj = Object.create(null)
+      obj.__proto__ = { nested: 'value' }
+      const key = [obj]
 
       expect(hashKey(key)).toEqual(JSON.stringify(key))
       expect(hashKey(key)).not.toEqual(hashKey([{}]))
