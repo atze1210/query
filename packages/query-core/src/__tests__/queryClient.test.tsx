@@ -1535,6 +1535,23 @@ describe('queryClient', () => {
       expect(queryClient.getQueryState(key)?.dataUpdateCount).toBe(1)
     })
 
+    it('should not invalidate queries when an undefined property is missing in the query key', async () => {
+      const key = queryKey()
+      const queryKeyA = [key, { a: 'a' }] as const
+
+      await queryClient.fetchQuery({
+        queryKey: queryKeyA,
+        queryFn: () => 'data',
+      })
+
+      await queryClient.invalidateQueries({
+        queryKey: [key, { a: 'a', b: undefined }],
+        refetchType: 'none',
+      })
+
+      expect(queryClient.getQueryState(queryKeyA)?.isInvalidated).toBe(false)
+    })
+
     it('should cancel ongoing fetches if cancelRefetch option is set (default value)', async () => {
       const key = queryKey()
       const abortFn = vi.fn()
