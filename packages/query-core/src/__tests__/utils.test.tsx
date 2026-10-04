@@ -165,6 +165,24 @@ describe('core/utils', () => {
       const b = [{ a: null, c: 'c', d: [{ d: 'd ' }] }]
       expect(partialMatchKey(a, b)).toEqual(false)
     })
+
+    it('should return `true` when the filter contains undefined for an existing property', () => {
+      const a = [{ a: 1, b: 2 }]
+      const b = [{ a: undefined }]
+      expect(partialMatchKey(a, b)).toEqual(true)
+    })
+
+    it('should return `false` when the filter contains undefined for a missing property', () => {
+      const a = [{ a: 1 }]
+      const b = [{ b: undefined }]
+      expect(partialMatchKey(a, b)).toEqual(false)
+    })
+
+    it('should return `false` when the filter contains undefined on the parent object but object is missing', () => {
+      const a = [{ a: { b: 1 } }]
+      const b = [{ c: undefined }]
+      expect(partialMatchKey(a, b)).toEqual(false)
+    })
   })
 
   describe('replaceEqualDeep', () => {
