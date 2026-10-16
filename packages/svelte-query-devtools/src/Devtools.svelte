@@ -42,6 +42,10 @@
     /**
      * Use this so you can attach the devtool's styles to specific element in the DOM.
      */
+    shadowDomTarget?: ShadowRoot
+    /**
+     * @deprecated Use `shadowDomTarget` instead.
+     */
     shadowDOMTarget?: ShadowRoot
     /**
      * Set this to true to hide disabled queries from the devtools panel.
@@ -56,6 +60,7 @@
     client = useQueryClient(),
     errorTypes = [],
     styleNonce = undefined,
+    shadowDomTarget = undefined,
     shadowDOMTarget = undefined,
     hideDisabledQueries = false,
   }: DevtoolsOptions = $props()
@@ -78,6 +83,7 @@
           initialIsOpen,
           errorTypes,
           styleNonce,
+          shadowDomTarget,
           shadowDOMTarget,
           hideDisabledQueries,
         })

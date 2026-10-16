@@ -45,6 +45,10 @@ export interface DevtoolsOptions {
   /**
    * Use this to render the devtools inside a Shadow DOM.
    */
+  shadowDomTarget?: ShadowRoot
+  /**
+   * @deprecated Use `shadowDomTarget` instead.
+   */
   shadowDOMTarget?: ShadowRoot
   /**
    * Use this to hide disabled queries from the devtools panel.
@@ -66,6 +70,7 @@ export function PreactQueryDevtools(props: DevtoolsOptions): VNode | null {
     initialIsOpen,
     errorTypes,
     styleNonce,
+    shadowDomTarget,
     shadowDOMTarget,
     hideDisabledQueries,
     theme,
@@ -82,6 +87,7 @@ export function PreactQueryDevtools(props: DevtoolsOptions): VNode | null {
         initialIsOpen,
         errorTypes,
         styleNonce,
+        shadowDomTarget,
         shadowDOMTarget,
         hideDisabledQueries,
         theme,

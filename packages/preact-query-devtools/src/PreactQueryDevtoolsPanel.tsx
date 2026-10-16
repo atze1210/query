@@ -24,6 +24,10 @@ export interface DevtoolsPanelOptions {
   /**
    * Use this to render the devtools inside a Shadow DOM.
    */
+  shadowDomTarget?: ShadowRoot
+  /**
+   * @deprecated Use `shadowDomTarget` instead.
+   */
   shadowDOMTarget?: ShadowRoot
   /**
    * Custom styles for the devtools panel container.
@@ -52,6 +56,7 @@ export function PreactQueryDevtoolsPanel(
   const {
     errorTypes,
     styleNonce,
+    shadowDomTarget,
     shadowDOMTarget,
     hideDisabledQueries,
     theme,
@@ -68,6 +73,7 @@ export function PreactQueryDevtoolsPanel(
         initialIsOpen: true,
         errorTypes,
         styleNonce,
+        shadowDomTarget,
         shadowDOMTarget,
         onClose: props.onClose,
         hideDisabledQueries,

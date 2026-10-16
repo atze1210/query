@@ -71,6 +71,10 @@ export interface DevtoolsOptions {
   /**
    * Use this so you can attach the devtool's styles to a specific element in the DOM.
    */
+  shadowDomTarget?: ShadowRoot
+  /**
+   * @deprecated Use `shadowDomTarget` instead.
+   */
   shadowDOMTarget?: ShadowRoot
   /**
    * Set this to true to hide disabled queries from the devtools panel.

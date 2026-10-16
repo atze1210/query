@@ -21,6 +21,10 @@ export interface DevtoolsPanelOptions {
   /**
    * Use this so you can attach the devtool's styles to specific element in the DOM.
    */
+  shadowDomTarget?: ShadowRoot
+  /**
+   * @deprecated Use `shadowDomTarget` instead.
+   */
   shadowDOMTarget?: ShadowRoot
 
   /**
@@ -50,7 +54,13 @@ export default function SolidQueryDevtoolsPanel(props: DevtoolsPanelOptions) {
   const queryClient = useQueryClient(props.client)
   const client = createMemo(() => queryClient)
   let ref!: HTMLDivElement
-  const { errorTypes, styleNonce, shadowDOMTarget, hideDisabledQueries } = props
+  const {
+    errorTypes,
+    styleNonce,
+    shadowDomTarget,
+    shadowDOMTarget,
+    hideDisabledQueries,
+  } = props
   const devtools = new TanstackQueryDevtoolsPanel({
     client: client(),
     queryFlavor: 'Solid Query',
@@ -61,6 +71,7 @@ export default function SolidQueryDevtoolsPanel(props: DevtoolsPanelOptions) {
     initialIsOpen: true,
     errorTypes,
     styleNonce,
+    shadowDomTarget,
     shadowDOMTarget,
     onClose: props.onClose,
     hideDisabledQueries,

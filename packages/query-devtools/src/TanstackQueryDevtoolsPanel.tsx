@@ -17,6 +17,10 @@ import type { Signal } from 'solid-js'
 
 export interface TanstackQueryDevtoolsPanelConfig extends QueryDevtoolsProps {
   styleNonce?: string
+  shadowDomTarget?: ShadowRoot
+  /**
+   * @deprecated Use `shadowDomTarget` instead.
+   */
   shadowDOMTarget?: ShadowRoot
   onClose?: () => void
 }
@@ -50,17 +54,23 @@ class TanstackQueryDevtoolsPanel {
       initialIsOpen,
       errorTypes,
       styleNonce,
+      shadowDomTarget,
       shadowDOMTarget,
       onClose,
       hideDisabledQueries,
       theme,
     } = config
+    if (shadowDomTarget !== undefined && shadowDOMTarget !== undefined) {
+      throw new Error(
+        'shadowDomTarget and shadowDOMTarget options should not both be set. Use shadowDomTarget (shadowDOMTarget is deprecated).',
+      )
+    }
     this.#client = createSignal(client)
     this.#queryFlavor = queryFlavor
     this.#version = version
     this.#onlineManager = onlineManager
     this.#styleNonce = styleNonce
-    this.#shadowDOMTarget = shadowDOMTarget
+    this.#shadowDOMTarget = shadowDomTarget ?? shadowDOMTarget
     this.#buttonPosition = createSignal(buttonPosition)
     this.#position = createSignal(position)
     this.#initialIsOpen = createSignal(initialIsOpen)

@@ -117,5 +117,42 @@ describe('TanstackQueryDevtoolsPanel', () => {
         }
       })
     })
+
+    describe('shadowDomTarget', () => {
+      it('should accept shadowDomTarget', () => {
+        const host = document.createElement('div')
+        const shadowDomTarget = host.attachShadow({ mode: 'open' })
+        const el = document.createElement('div')
+        const devtoolsWithTarget = new TanstackQueryDevtoolsPanel({
+          client: new QueryClient(),
+          queryFlavor: 'TanStack Query',
+          version: '5',
+          onlineManager,
+          shadowDomTarget,
+        })
+
+        expect(() => devtoolsWithTarget.mount(el)).not.toThrow()
+        devtoolsWithTarget.unmount()
+      })
+
+      it('should throw when shadowDomTarget and shadowDOMTarget are both set', () => {
+        const host = document.createElement('div')
+        const shadowTarget = host.attachShadow({ mode: 'open' })
+
+        expect(
+          () =>
+            new TanstackQueryDevtoolsPanel({
+              client: new QueryClient(),
+              queryFlavor: 'TanStack Query',
+              version: '5',
+              onlineManager,
+              shadowDomTarget: shadowTarget,
+              shadowDOMTarget: shadowTarget,
+            }),
+        ).toThrow(
+          'shadowDomTarget and shadowDOMTarget options should not both be set. Use shadowDomTarget (shadowDOMTarget is deprecated).',
+        )
+      })
+    })
   })
 })

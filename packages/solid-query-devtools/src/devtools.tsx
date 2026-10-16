@@ -41,6 +41,10 @@ interface DevtoolsOptions {
   /**
    * Use this so you can attach the devtool's styles to specific element in the DOM.
    */
+  shadowDomTarget?: ShadowRoot
+  /**
+   * @deprecated Use `shadowDomTarget` instead.
+   */
   shadowDOMTarget?: ShadowRoot
   /**
    * Set this to true to hide disabled queries from the devtools panel.
@@ -67,6 +71,7 @@ export default function SolidQueryDevtools(props: DevtoolsOptions) {
     initialIsOpen: props.initialIsOpen,
     errorTypes: props.errorTypes,
     styleNonce: props.styleNonce,
+    shadowDomTarget: props.shadowDomTarget,
     shadowDOMTarget: props.shadowDOMTarget,
     hideDisabledQueries: props.hideDisabledQueries,
     theme: props.theme,

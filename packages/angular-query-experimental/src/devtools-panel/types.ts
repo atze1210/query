@@ -37,6 +37,10 @@ export interface DevtoolsPanelOptions {
   /**
    * Use this so you can attach the devtool's styles to specific element in the DOM.
    */
+  shadowDomTarget?: ShadowRoot
+  /**
+   * @deprecated Use `shadowDomTarget` instead.
+   */
   shadowDOMTarget?: ShadowRoot
 
   /**

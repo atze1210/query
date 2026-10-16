@@ -21,6 +21,10 @@ export interface DevtoolsPanelOptions {
   /**
    * Use this so you can attach the devtool's styles to specific element in the DOM.
    */
+  shadowDomTarget?: ShadowRoot
+  /**
+   * @deprecated Use `shadowDomTarget` instead.
+   */
   shadowDOMTarget?: ShadowRoot
 
   /**
@@ -54,6 +58,7 @@ export function ReactQueryDevtoolsPanel(
   const {
     errorTypes,
     styleNonce,
+    shadowDomTarget,
     shadowDOMTarget,
     hideDisabledQueries,
     theme,
@@ -69,6 +74,7 @@ export function ReactQueryDevtoolsPanel(
       initialIsOpen: true,
       errorTypes,
       styleNonce,
+      shadowDomTarget,
       shadowDOMTarget,
       onClose: props.onClose,
       hideDisabledQueries,
