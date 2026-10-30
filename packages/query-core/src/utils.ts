@@ -245,6 +245,8 @@ export function hashKey(queryKey: QueryKey | MutationKey): string {
   )
 }
 
+const hasOwn = Object.prototype.hasOwnProperty
+
 /**
  * Checks if key `b` partially matches with key `a`.
  */
@@ -259,13 +261,13 @@ export function partialMatchKey(a: any, b: any): boolean {
   }
 
   if (a && b && typeof a === 'object' && typeof b === 'object') {
-    return Object.keys(b).every((key) => partialMatchKey(a[key], b[key]))
+    return Object.keys(b).every(
+      (key) => hasOwn.call(a, key) && partialMatchKey(a[key], b[key]),
+    )
   }
 
   return false
 }
-
-const hasOwn = Object.prototype.hasOwnProperty
 
 /**
  * This function returns `a` if `b` is deeply equal.
