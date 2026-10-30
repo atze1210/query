@@ -165,6 +165,12 @@ describe('core/utils', () => {
       const b = [{ a: null, c: 'c', d: [{ d: 'd ' }] }]
       expect(partialMatchKey(a, b)).toEqual(false)
     })
+
+    it('should return `false` if b has an undefined property that a does not have', () => {
+      const a = [{}]
+      const b = [{ a: undefined }]
+      expect(partialMatchKey(a, b)).toEqual(false)
+    })
   })
 
   describe('replaceEqualDeep', () => {
