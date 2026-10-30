@@ -613,6 +613,16 @@ describe('queryClient', () => {
 
       expect(result).toEqual([[['key', 1], 1]])
     })
+
+    it('should not match a missing property when the filter has it explicitly as undefined', () => {
+      queryClient.setQueryData([{ a: 1 }], 'value')
+
+      const result = queryClient.getQueriesData({
+        queryKey: [{ a: 1, b: undefined }],
+      })
+
+      expect(result).toEqual([])
+    })
   })
 
   describe('fetchQuery', () => {
