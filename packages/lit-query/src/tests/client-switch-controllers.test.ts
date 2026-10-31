@@ -206,6 +206,7 @@ describe('LQ-003 client-switch coverage across controllers', () => {
     const cacheAEntryAfterSwitch = clientA
       .getQueryCache()
       .find({ queryKey: consumer.queryKey })
+    await waitFor(() => (cacheAEntryAfterSwitch?.getObserversCount() ?? 0) === 0)
     expect(cacheAEntryAfterSwitch?.getObserversCount() ?? 0).toBe(0)
 
     void clientB.invalidateQueries({ queryKey: consumer.queryKey })
@@ -273,6 +274,7 @@ describe('LQ-003 client-switch coverage across controllers', () => {
     const cacheAEntryAfterSwitch = clientA
       .getQueryCache()
       .find({ queryKey: consumer.queryKey })
+    await waitFor(() => (cacheAEntryAfterSwitch?.getObserversCount() ?? 0) === 0)
     expect(cacheAEntryAfterSwitch?.getObserversCount() ?? 0).toBe(0)
 
     await consumer.infinite.fetchNextPage()

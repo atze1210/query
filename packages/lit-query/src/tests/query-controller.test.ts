@@ -928,6 +928,9 @@ describe('createQueryController', () => {
       .getQueryCache()
       .find({ queryKey: consumer.queryKey })
 
+    await waitFor(
+      () => (oldCacheQueryAfterSwitch?.getObserversCount() ?? 0) === 0,
+    )
     expect(oldCacheQueryAfterSwitch?.getObserversCount() ?? 0).toBe(0)
     expect(newCacheQueryAfterSwitch?.getObserversCount()).toBe(1)
 
