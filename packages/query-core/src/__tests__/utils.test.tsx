@@ -165,6 +165,19 @@ describe('core/utils', () => {
       const b = [{ a: null, c: 'c', d: [{ d: 'd ' }] }]
       expect(partialMatchKey(a, b)).toEqual(false)
     })
+
+    it('should return `false` if b has an own property and a does not', () => {
+      const a = [{ a: {} }]
+      const b = [{ a: { b: undefined } }]
+      expect(partialMatchKey(a, b)).toEqual(false)
+    })
+
+    it('should return `false` if a only has an inherited property', () => {
+      const proto = { b: undefined }
+      const a = [{ a: Object.create(proto) as { b?: undefined } }]
+      const b = [{ a: { b: undefined } }]
+      expect(partialMatchKey(a, b)).toEqual(false)
+    })
   })
 
   describe('replaceEqualDeep', () => {
