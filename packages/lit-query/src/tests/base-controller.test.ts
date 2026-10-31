@@ -3,6 +3,7 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit'
 import { QueryClient } from '@tanstack/query-core'
 import { QueryClientProvider } from '../QueryClientProvider.js'
 import { BaseController } from '../controllers/BaseController.js'
+import { TestControllerHost } from './testHost.js'
 
 const providerTagName = 'test-query-client-provider-base-controller'
 if (!customElements.get(providerTagName)) {
@@ -107,5 +108,37 @@ describe('BaseController', () => {
     controller.destroy()
     provider.remove()
     await Promise.resolve()
+  })
+
+  it('ignores stale deferred onConnected callbacks after reconnect', async () => {
+    const host = new TestControllerHost()
+    const client = new QueryClient()
+
+    class ExplicitClientRecordingController extends BaseController<number> {
+      connectedCalls = 0
+
+      constructor() {
+        super(host, 0, client)
+      }
+
+      protected onConnected(): void {
+        this.connectedCalls += 1
+      }
+
+      protected onDisconnected(): void {}
+
+      protected onHostUpdate(): void {}
+
+      protected onQueryClientChanged(): void {}
+    }
+
+    const controller = new ExplicitClientRecordingController()
+    host.connect()
+    host.disconnect()
+    host.connect()
+
+    await Promise.resolve()
+
+    expect(controller.connectedCalls).toBe(1)
   })
 })

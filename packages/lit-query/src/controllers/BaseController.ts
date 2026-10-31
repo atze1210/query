@@ -43,13 +43,13 @@ export abstract class BaseController<TResult> implements ReactiveController {
       return
     }
 
+    const connectionAttempt = ++this.connectionAttempt
     this.connected = true
-    let contextResolutionAttempt: number | undefined
+    let contextResolutionAttempt: number | undefined = connectionAttempt
 
     if (this.explicitClient) {
       this.queryClientResolutionState = 'bound'
     } else {
-      contextResolutionAttempt = ++this.connectionAttempt
       this.beginContextResolution()
     }
 
@@ -59,7 +59,11 @@ export abstract class BaseController<TResult> implements ReactiveController {
     // willUpdate), which synchronously triggers hostConnected before
     // subclass field initialization.
     queueMicrotask(() => {
-      if (this.connected && !this.destroyed) {
+      if (
+        this.connected &&
+        !this.destroyed &&
+        connectionAttempt === this.connectionAttempt
+      ) {
         this.onConnected()
       }
     })
