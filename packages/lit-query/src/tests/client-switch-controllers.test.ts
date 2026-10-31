@@ -202,6 +202,13 @@ describe('LQ-003 client-switch coverage across controllers', () => {
         .find({ queryKey: consumer.queryKey })
       return Boolean(cacheBEntry && cacheBEntry.getObserversCount() === 1)
     })
+    await waitFor(
+      () =>
+        (clientA
+          .getQueryCache()
+          .find({ queryKey: consumer.queryKey })
+          ?.getObserversCount() ?? 0) === 0,
+    )
 
     const cacheAEntryAfterSwitch = clientA
       .getQueryCache()
@@ -262,6 +269,13 @@ describe('LQ-003 client-switch coverage across controllers', () => {
         .find({ queryKey: consumer.queryKey })
       return Boolean(cacheBEntry && cacheBEntry.getObserversCount() === 1)
     })
+    await waitFor(
+      () =>
+        (clientA
+          .getQueryCache()
+          .find({ queryKey: consumer.queryKey })
+          ?.getObserversCount() ?? 0) === 0,
+    )
     await waitFor(
       () =>
         consumer.infinite().isSuccess &&

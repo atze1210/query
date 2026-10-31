@@ -920,6 +920,13 @@ describe('createQueryController', () => {
         .find({ queryKey: consumer.queryKey })
       return Boolean(newCacheQuery && newCacheQuery.getObserversCount() === 1)
     })
+    await waitFor(
+      () =>
+        (clientA
+          .getQueryCache()
+          .find({ queryKey: consumer.queryKey })
+          ?.getObserversCount() ?? 0) === 0,
+    )
 
     const oldCacheQueryAfterSwitch = clientA
       .getQueryCache()
@@ -1241,6 +1248,13 @@ describe('createQueryController', () => {
     document.body.append(providerB)
     await providerB.updateComplete
     await waitFor(() => consumer.query().isSuccess && consumer.queryCalls >= 2)
+    await waitFor(
+      () =>
+        (clientA
+          .getQueryCache()
+          .find({ queryKey: consumer.queryKey })
+          ?.getObserversCount() ?? 0) === 0,
+    )
 
     expect(
       clientA
