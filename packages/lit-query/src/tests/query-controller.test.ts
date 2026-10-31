@@ -1020,7 +1020,7 @@ describe('createQueryController', () => {
     host.connect()
     host.update()
 
-    expect(cacheQuery?.getObserversCount()).toBe(1)
+    await waitFor(() => cacheQuery?.getObserversCount() === 1)
   })
 
   it('M17: no-explicit-client constructor path is safe before provider resolution', async () => {
