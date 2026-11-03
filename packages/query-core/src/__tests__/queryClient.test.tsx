@@ -142,6 +142,21 @@ describe('queryClient', () => {
         queryClient.getQueryDefaults([...key, 'todo', 'detail']),
       ).toMatchObject({ suspense: true, staleTime: 5000 })
     })
+
+    it('should not match query defaults with undefined properties when the property is missing in the query key', async () => {
+      const key = queryKey()
+      queryClient.setQueryDefaults([key, { foo: 'foo', bar: undefined }], {
+        queryFn: () => 'data',
+      })
+      const observer = new QueryObserver(queryClient, {
+        queryKey: [key, { foo: 'foo' }],
+        retry: false,
+        enabled: false,
+      })
+
+      const { status } = await observer.refetch()
+      expect(status).toBe('error')
+    })
   })
 
   describe('defaultQueryOptions', () => {
