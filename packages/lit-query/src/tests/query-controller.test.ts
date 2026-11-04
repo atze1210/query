@@ -1011,7 +1011,7 @@ describe('createQueryController', () => {
     expect(cacheQuery?.getObserversCount()).toBe(1)
 
     host.disconnect()
-    expect(cacheQuery?.getObserversCount()).toBe(0)
+    await waitFor(() => cacheQuery?.getObserversCount() === 0)
 
     host.connect()
     host.update()
