@@ -122,6 +122,48 @@ describe('createPersister', () => {
     expect(queryFn).toHaveBeenCalledExactlyOnceWith(context)
   })
 
+  it('should keep stored item if storage read fails', async () => {
+    const storageData = new Map<string, string>()
+    const getItemMock = vi.fn(async (key: string) => {
+      if (key === storageKey) {
+        throw new Error('read failed')
+      }
+      return storageData.get(key)
+    })
+    const removeItemMock = vi.fn(async (key: string) => {
+      storageData.delete(key)
+    })
+    const storage = {
+      getItem: getItemMock,
+      setItem: async (key: string, value: string) => {
+        storageData.set(key, value)
+      },
+      removeItem: removeItemMock,
+      entries: async () => Array.from(storageData.entries()),
+    }
+    const { context, persister, query, queryFn, storageKey } = setupPersister(
+      ['foo'],
+      {
+        storage,
+      },
+    )
+
+    await storage.setItem(
+      storageKey,
+      JSON.stringify({
+        buster: '',
+        state: { dataUpdatedAt: Date.now(), data: 'cached' },
+      }),
+    )
+
+    await persister.persisterFn(queryFn, context, query)
+
+    expect(getItemMock).toHaveBeenCalledWith(storageKey)
+    expect(removeItemMock).not.toHaveBeenCalled()
+    expect(storageData.get(storageKey)).toBeDefined()
+    expect(queryFn).toHaveBeenCalledExactlyOnceWith(context)
+  })
+
   it('should remove stored item if `dataUpdatedAt` is empty', async () => {
     const storage = getFreshStorage()
     const { context, persister, query, queryFn, storageKey } = setupPersister(

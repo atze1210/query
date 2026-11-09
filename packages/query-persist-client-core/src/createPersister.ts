@@ -159,7 +159,6 @@ export function experimental_createQueryPersister<TStorageValue = string>({
             'Encountered an error attempting to restore query cache from persisted location.',
           )
         }
-        await storage.removeItem(storageKey)
       }
     }
 
